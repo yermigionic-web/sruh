@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>서록대학병원 | 서록대학교 의학부 부속병원</title>
+
+<!-- ===================== 외부 폰트 (한국어/영어 공용) ===================== -->
+<!-- Pretendard: 한글+라틴을 SF Pro 느낌으로 통일감 있게 렌더링 -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap">
+
+<style>
+/* =======================================================================
+   서록대학병원 — 디자인 토큰
+   palette : paper white · graphite gray · light mint(소량) · silver(metallic)
+   black은 텍스트에만 사용
+   ======================================================================= */
+:root{
+  --paper:#f2f3f5;
+  --surface:#ffffff;
+  --surface-2:#f7f8fa;
+  --ink:#16181b;
+  --ink-soft:#6a7178;
+  --ink-faint:#9aa1a8;
+  --line:#e7e9ec;
+
+  --mint:#54c7ac;          /* 포인트, 소량만 */
+  --mint-deep:#2f9b83;
+  --mint-soft:#def4ee;
+
+  --graphite:#26292e;      /* 어두운 회색 패널 */
+  --graphite-2:#33373d;
+
+  /* 실버 메탈릭 그라데이션 */
+  --silver:linear-gradient(135deg,#eef0f3 0%,#fbfcfd 22%,#c5cbd2 50%,#f3f5f7 74%,#d6dadf 100%);
+  --silver-edge:linear-gradient(135deg,#fdfdfe,#b9c0c8 48%,#fdfefe);
+
+  --r-lg:24px; --r-md:18px; --r-sm:12px; --r-pill:999px;
+
+  --sh-1:0 1px 2px rgba(22,24,27,.05),0 4px 14px rgba(22,24,27,.06);
+  --sh-2:0 2px 6px rgba(22,24,27,.06),0 16px 40px rgba(22,24,27,.10);
+  --sh-card:0 1px 1px rgba(22,24,27,.04),0 10px 30px rgba(22,24,27,.08);
+
+  --ff:"Pretendard","Pretendard Variable",system-ui,-apple-system,sans-serif;
+  --ff-en:"Cormorant Garamond",serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--ff);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #fafbfc 0%, var(--paper) 60%) fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  letter-spacing:-.01em;
+}
+
+/* ===== 모바일 우선 480px 컬럼 (PC에서도 중앙 정렬로 구동) ===== */
+.device{
+  position:relative;
+  max-width:480px;
+  min-height:100dvh;
+  margin:0 auto;
+  background:var(--surface);
+  box-shadow:0 0 0 1px var(--line),0 30px 80px rgba(22,24,27,.10);
+  overflow:hidden;
+}
+@media (min-width:520px){
+  .device{margin:18px auto;min-height:calc(100dvh - 36px);border-radius:34px}
+}
+
+/* eyebrow / 라벨 (영문 대문자 유틸리티 서체감) */
+.eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mint-deep);
+}
+.serif{font-family:var(--ff-en);font-style:italic;letter-spacing:0}
+
+/* ============================ 헤더 / 로고 ============================ */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(22px) saturate(180%);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  border-bottom:1px solid rgba(231,233,236,.9);
+}
+.brand{
+  display:flex;align-items:center;gap:11px;
+  padding:14px 20px 12px;
+}
+.brand img{height:38px;width:auto;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.08))}
+/* 로고 로드 전/실패 시 자리표시 (이미지는 GitHub 제공 로고 사용) */
+.brand .logo-fallback{
+  height:38px;min-width:38px;display:none;align-items:center;justify-content:center;
+  border-radius:11px;background:var(--silver);box-shadow:var(--sh-1),inset 0 0 0 1px rgba(255,255,255,.6);
+  font-weight:800;color:var(--graphite);font-size:15px;padding:0 8px
+}
+.brand .wordmark{display:flex;flex-direction:column;line-height:1.05}
+.brand .wordmark b{font-size:16.5px;font-weight:800;letter-spacing:-.02em}
+.brand .wordmark span{font-size:10px;color:var(--ink-faint);letter-spacing:.04em;margin-top:2px}
+
+/* 메인 탭 */
+.tabs{display:flex;gap:6px;padding:0 14px 11px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;border:none;cursor:pointer;
+  font-family:var(--ff);font-size:14px;font-weight:600;color:var(--ink-soft);
+  padding:9px 16px;border-radius:var(--r-pill);background:transparent;
+  transition:.22s;white-space:nowrap;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{
+  color:var(--ink);background:var(--surface);
+  box-shadow:var(--sh-1),inset 0 0 0 1px var(--line);
+}
+.tab.on::after{
+  content:"";display:block;height:2px;width:18px;margin:5px auto -2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--mint),var(--mint-deep));
+}
+
+/* 의과 서브탭 (가로 칩 스크롤) */
+.subtabs{
+  display:none;gap:7px;padding:2px 14px 12px;overflow-x:auto;scrollbar-width:none;
+  border-top:1px solid var(--line);padding-top:11px;
+}
+.subtabs.show{display:flex}
+.subtabs::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;cursor:pointer;border:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink-soft);
+  font-family:var(--ff);font-size:12.5px;font-weight:600;
+  padding:7px 13px;border-radius:var(--r-pill);transition:.2s;white-space:nowrap;
+}
+.chip.on{
+  color:#fff;border-color:transparent;
+  background:linear-gradient(135deg,var(--graphite),var(--graphite-2));
+  box-shadow:var(--sh-1);
+}
+.chip .mark{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mint);
+  margin-left:6px;vertical-align:middle;box-shadow:0 0 0 2px rgba(84,199,172,.18)}
+
+/* ============================ 본문 영역 ============================ */
+main{padding-bottom:42px}
+.view{display:none;animation:rise .5s cubic-bezier(.2,.7,.2,1)}
+.view.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.pad{padding:0 20px}
+
+/* 이미지 자리표시 (실제 이미지 미포함 — GitHub 추후 삽입) */
+.imgph{
+  position:relative;border-radius:var(--r-md);overflow:hidden;
+  background:
+    linear-gradient(135deg,#eceef1,#f6f7f9 50%,#e6e9ec);
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-faint);font-size:11px;letter-spacing:.04em;
+}
+.imgph-tag{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:14px}
+.imgph-tag svg{width:26px;height:26px;opacity:.5}
+
+/* ===== HERO (메인) ===== */
+.hero{
+  position:relative;margin:18px 20px 0;border-radius:var(--r-lg);overflow:hidden;
+  background:linear-gradient(165deg,var(--graphite) 0%,#1c1f23 100%);
+  color:#fff;box-shadow:var(--sh-2);
+  isolation:isolate;
+}
+.hero::before{ /* 메탈릭 광택 라인 */
+  content:"";position:absolute;inset:0;z-index:0;opacity:.5;
+  background:
+    radial-gradient(420px 220px at 85% -10%, rgba(84,199,172,.28), transparent 60%),
+    linear-gradient(120deg, transparent 40%, rgba(255,255,255,.06) 50%, transparent 60%);
+}
+.hero-in{position:relative;z-index:1;padding:30px 24px 26px}
+.hero .rank{
+  display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.04em;
+  padding:6px 12px;border-radius:var(--r-pill);
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  color:#dff6ef;backdrop-filter:blur(6px);
+}
+.hero .rank .dot{width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint)}
+.hero h1{font-size:30px;font-weight:800;line-height:1.18;margin:16px 0 6px;letter-spacing:-.03em}
+.hero h1 em{font-family:var(--ff-en);font-style:italic;font-weight:600;color:#cfeee6}
+.hero .sub{font-size:13.5px;color:#b9c0c6;line-height:1.6;max-width:30ch}
+.hero-stats{display:flex;gap:0;margin-top:22px;border-top:1px solid rgba(255,255,255,.1);padding-top:18px}
+.hero-stats .s{flex:1;border-right:1px solid rgba(255,255,255,.08)}
+.hero-stats .s:last-child{border:none}
+.hero-stats .n{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.hero-stats .n small{font-size:12px;font-weight:700;color:var(--mint);margin-left:1px}
+.hero-stats .l{font-size:10.5px;color:#9aa1a7;margin-top:3px;letter-spacing:.02em}
+.hero-photo{height:150px;margin-top:0;border-radius:0}
+
+/* 섹션 공통 */
+.section{margin-top:30px}
+.section .head{padding:0 20px;margin-bottom:14px}
+.section .head .eyebrow{display:block;margin-bottom:7px}
+.section .head h2{font-size:21px;font-weight:800;letter-spacing:-.025em}
+.section .head p{font-size:13px;color:var(--ink-soft);margin-top:5px;line-height:1.6}
+
+/* 자랑/지표 카드 그리드 */
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px}
+.fcard{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:16px;box-shadow:var(--sh-1);position:relative;overflow:hidden;
+}
+.fcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--silver)}
+.fcard .ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:var(--mint-soft);color:var(--mint-deep);margin-bottom:11px}
+.fcard .ic svg{width:18px;height:18px}
+.fcard h3{font-size:14px;font-weight:700}
+.fcard p{font-size:12px;color:var(--ink-soft);margin-top:5px;line-height:1.55}
+
+/* 글라스 안내 카드 */
+.glass{
+  margin:0 20px;border-radius:var(--r-lg);padding:22px;
+  background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(247,248,250,.7));
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:var(--sh-card),inset 0 1px 0 rgba(255,255,255,.8);
+  backdrop-filter:blur(10px);
+}
+.glass h3{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.glass p{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-top:9px}
+.quote-mark{font-family:var(--ff-en);font-size:46px;line-height:.5;color:var(--mint);font-style:italic}
+
+/* 가로 배너(병원 전경 자리) */
+.banner{margin:0 20px;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-1)}
+.banner .imgph{height:170px;border-radius:0;border:none}
+
+/* footer */
+.foot{padding:30px 24px 8px;color:var(--ink-faint);font-size:11px;line-height:1.7;text-align:center}
+.foot .line{height:1px;background:var(--line);margin:0 0 18px}
+
+/* ===================== 의과 소개 ===================== */
+.dept-hero{padding:24px 20px 4px}
+.dept-hero .eyebrow{margin-bottom:9px}
+.dept-hero h1{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.dept-hero .en{font-family:var(--ff-en);font-style:italic;font-size:16px;color:var(--ink-faint);margin-top:4px}
+.dept-desc{
+  margin:18px 20px 0;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:18px 18px;
+}
+.dept-desc p{font-size:13.5px;color:#3c4248;line-height:1.78}
+.dept-desc p + p{margin-top:10px}
+
+.staff-head{padding:26px 20px 4px;display:flex;align-items:baseline;justify-content:space-between}
+.staff-head h2{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.staff-head span{font-size:11px;color:var(--ink-faint)}
+
+.staff-list{padding:8px 20px 0;display:flex;flex-direction:column;gap:11px}
+.staff{
+  position:relative;display:flex;gap:14px;align-items:flex-start;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:15px;box-shadow:var(--sh-1);transition:.22s;
+}
+.staff.clickable{cursor:pointer}
+.staff.clickable:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:#dfe2e6}
+.staff .photo{
+  flex:0 0 60px;width:60px;height:74px;border-radius:10px;overflow:hidden;
+  background:var(--silver);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),var(--sh-1);
+  display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:9px;text-align:center;
+  position:relative;
+}
+.staff .photo.has-char::after{ /* 지정 캐릭터 표시 점 */
+  content:"";position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;
+  background:var(--mint);box-shadow:0 0 0 2px #fff,0 0 6px var(--mint);
+}
+.staff .info{flex:1;min-width:0}
+.staff .rank{
+  display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.02em;
+  color:var(--graphite);background:var(--surface-2);border:1px solid var(--line);
+  padding:3px 9px;border-radius:var(--r-pill);
+}
+.staff .rank.lead{background:linear-gradient(135deg,var(--graphite),var(--graphite-2));color:#fff;border-color:transparent}
+.staff .nm{font-size:16px;font-weight:800;margin-top:8px;display:flex;align-items:center;gap:7px}
+.staff .nm .go{font-size:11px;font-weight:700;color:var(--mint-deep)}
+.staff .meta{font-size:11.5px;color:var(--ink-soft);margin-top:6px;line-height:1.6}
+.staff .meta b{color:#3c4248;font-weight:700}
+.staff .paper{
+  font-size:11px;color:var(--ink-faint);margin-top:7px;line-height:1.55;
+  padding-left:10px;border-left:2px solid var(--mint-soft);
+}
+
+/* ===================== 캐릭터 소개 ===================== */
+.char-wrap{padding:22px 20px 0}
+.char-top{display:flex;gap:16px;align-items:flex-start}
+
+/* ---- 시그니처: 의사 ID 카드 ---- */
+.idcard{
+  flex:0 0 168px;width:168px;border-radius:18px;overflow:hidden;
+  background:var(--silver);
+  padding:2px; /* 메탈릭 테두리 */
+  box-shadow:var(--sh-2);
+  position:relative;
+}
+.idcard-inner{
+  border-radius:16px;overflow:hidden;background:var(--graphite);color:#fff;
+  position:relative;
+}
+.idcard-bar{
+  height:30px;display:flex;align-items:center;gap:6px;padding:0 11px;
+  background:linear-gradient(135deg,#1d2024,#2b2f35);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.idcard-bar img{height:15px;width:auto;filter:brightness(0) invert(1) opacity(.92)}
+.idcard-bar .lf{display:none;font-size:9px;font-weight:800;letter-spacing:.06em;color:#dff6ef}
+.idcard-bar span{font-size:8px;letter-spacing:.14em;color:#8b9298;margin-left:auto;font-weight:700}
+.idcard-photo{
+  height:142px;margin:11px;border-radius:11px;
+  background:linear-gradient(135deg,#3a3e44,#23262b);
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;color:#6f767d;font-size:9px;text-align:center;
+}
+.idcard-body{padding:0 13px 13px}
+.idcard-name{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.idcard-name small{font-family:var(--ff-en);font-style:italic;font-weight:600;font-size:12px;color:#9aa1a7;margin-left:5px}
+.idcard-role{font-size:10.5px;color:var(--mint);font-weight:700;margin-top:3px}
+.idcard-strip{
+  margin:11px -13px -13px;padding:8px 13px;
+  background:linear-gradient(90deg,var(--mint-deep),var(--mint));
+  display:flex;justify-content:space-between;align-items:center;
+}
+.idcard-strip .lbl{font-size:8px;letter-spacing:.1em;color:rgba(255,255,255,.85);font-weight:700;text-transform:uppercase}
+.idcard-strip .val{font-size:10px;font-weight:800;color:#fff;letter-spacing:.04em}
+/* 보안 미세패턴(귀요체) */
+.idcard-inner::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;
+  background:repeating-linear-gradient(45deg,#fff 0 1px,transparent 1px 7px);
+}
+
+.char-meta{flex:1;min-width:0}
+.char-meta .eyebrow{margin-bottom:6px}
+.char-meta h1{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1.12}
+.char-meta .dept{font-size:12.5px;color:var(--ink-soft);margin-top:5px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.chips .c{
+  font-size:11px;font-weight:600;color:var(--ink-soft);
+  background:var(--surface-2);border:1px solid var(--line);
+  padding:5px 11px;border-radius:var(--r-pill);
+}
+.chips .c b{color:var(--ink);font-weight:800}
+
+.char-section{margin:22px 20px 0}
+.char-section h3{font-size:12px;font-weight:800;letter-spacing:.02em;color:var(--graphite);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px}
+.char-section h3::before{content:"";width:14px;height:2px;border-radius:2px;background:var(--mint)}
+.char-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:16px 18px;box-shadow:var(--sh-1);
+}
+.char-card p{font-size:13px;color:#3c4248;line-height:1.78}
+.kv{display:flex;flex-direction:column;gap:9px}
+.kv .row{display:flex;gap:12px;font-size:13px}
+.kv .row .k{flex:0 0 78px;color:var(--ink-faint);font-weight:600}
+.kv .row .v{flex:1;color:#2e3439}
+.kv .row .v b{font-weight:800;color:var(--ink)}
+
+.bigquote{
+  margin:22px 20px 0;border-radius:var(--r-lg);overflow:hidden;position:relative;
+  background:linear-gradient(165deg,var(--graphite),#1b1e22);color:#fff;
+  padding:26px 24px;box-shadow:var(--sh-2);
+}
+.bigquote::before{content:"";position:absolute;inset:0;opacity:.4;
+  background:radial-gradient(360px 180px at 90% -20%,rgba(84,199,172,.3),transparent 60%)}
+.bigquote .qm{position:relative;font-family:var(--ff-en);font-style:italic;font-size:54px;line-height:.4;color:var(--mint);opacity:.8}
+.bigquote q{position:relative;display:block;font-size:18px;font-weight:600;line-height:1.5;margin-top:6px;letter-spacing:-.01em;quotes:none}
+.bigquote .who{position:relative;font-size:11px;color:#9aa1a7;margin-top:16px;letter-spacing:.04em}
+
+.backbtn{
+  display:inline-flex;align-items:center;gap:7px;cursor:pointer;border:none;
+  background:var(--surface-2);border:1px solid var(--line);
+  font-family:var(--ff);font-size:12.5px;font-weight:600;color:var(--ink-soft);
+  padding:8px 14px;border-radius:var(--r-pill);margin:0 20px 4px;transition:.2s;
+}
+.backbtn:hover{color:var(--ink);background:#fff}
+.backbtn svg{width:14px;height:14px}
+
+a{color:inherit}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+:focus-visible{outline:2px solid var(--mint-deep);outline-offset:2px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<div class="device" id="app">
+
+  <!-- ============================ 헤더 ============================ -->
+  <header class="topbar">
+    <div class="brand">
+      <!-- 병원 공식 로고 (한국어 병원명 포함, GitHub 제공) -->
+      <img src="https://raw.githubusercontent.com/yermigionic-web/sruh/refs/heads/main/sruhlogo.png"
+           alt="서록대학병원 로고"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="logo-fallback">서록</div>
+      <div class="wordmark">
+        <b>서록대학병원</b>
+        <span>SEOROK UNIVERSITY HOSPITAL</span>
+      </div>
+    </div>
+
+    <!-- 메인 탭 -->
+    <nav class="tabs" id="tabs">
+      <button class="tab on" data-tab="home">홈</button>
+      <button class="tab" data-tab="about">병원 소개</button>
+      <button class="tab" data-tab="dept">의과 소개</button>
+      <button class="tab" data-tab="visit">진료 안내</button>
+    </nav>
+
+    <!-- 의과 서브탭 (의과 소개 선택 시 노출) -->
+    <nav class="subtabs" id="subtabs"></nav>
+  </header>
+
+  <!-- ============================ 본문 ============================ -->
+  <main>
+    <!-- (1) 메인/홈 -->
+    <section class="view on" id="view-home"></section>
+    <!-- (2) 의과 소개 상세 -->
+    <section class="view" id="view-dept"></section>
+    <!-- (3) 캐릭터 소개 -->
+    <section class="view" id="view-char"></section>
+  </main>
+</div>
+
+<!-- ============================ 데이터 (JSON) ============================ -->
+<script type="application/json" id="data">
+{
+  "hospital":{
+    "name":"서록대학병원",
+    "full":"서록대학교 의학부 부속병원",
+    "en":"Seorok University Hospital",
+    "rank":"대한민국 종합병원 평가 2위",
+    "stats":[
+      {"n":"1,820","u":"병상","l":"가동 병상 수"},
+      {"n":"24","u":"개","l":"진료 전문 과목"},
+      {"n":"98.6","u":"%","l":"환자 재방문 의향"}
+    ]
+  },
+  "departments":[
+    {
+      "id":"ent","name":"이비인후과","en":"Otorhinolaryngology",
+      "desc":[
+        "이비인후과는 귀·코·목, 그리고 머리와 목 부위의 질환을 두루 다루는 진료과입니다. 잘 안 들리는 증상, 어지럼증, 코막힘과 축농증, 목소리 변화, 삼킴 곤란처럼 일상에 바로 영향을 주는 문제를 진단하고 치료합니다.",
+        "서록대학병원 이비인후과는 내시경과 미세현미경을 이용한 정밀 수술에 강점이 있으며, 청력 재활부터 두경부 종양까지 한 곳에서 이어지는 진료 체계를 갖추고 있습니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"한승우","school":"연세대학교 의과대학","major":"비과(코) 전공","career":"만성 부비동염 내시경 수술 3,200례 집도","paper":"「풍선 카테터를 이용한 만성 비부비동염 치료의 장기 성적」 대한이비인후과학회지 게재"},
+        {"rank":"부교수","name":"문지영","school":"서울대학교 의과대학","major":"이과(귀) 전공","career":"인공와우 이식 수술 860례 시행","paper":"「난청 환자의 인공와우 이식 후 언어 인지 회복」 국제 학술지 OTL 발표"},
+        {"rank":"조교수","name":"배현수","school":"고려대학교 의과대학","major":"두경부외과 전공","career":"갑상선·후두 종양 절제술 540례","paper":"「로봇 보조 경구강 후두 수술의 안전성 분석」 학회 구연 발표"},
+        {"rank":"펠로우","name":"신예린","school":"한양대학교 의과대학","major":"음성·후두 질환 세부전공","career":"성대 미세수술 210례 보조 및 집도","paper":"「전문 음성 사용자의 성대결절 보존적 치료」 포스터 발표"},
+        {"rank":"레지던트","name":"곽도현","school":"부산대학교 의과대학","major":"이비인후과 전공의 3년차","career":"외래·응급 비출혈 처치 다수, 내시경 수술 참여","paper":"원내 증례 보고 「반복성 양성 발작성 두위현훈」 정리"}
+      ]
+    },
+    {
+      "id":"im","name":"내과","en":"Internal Medicine",
+      "desc":[
+        "내과는 수술 대신 약물과 시술로 몸속 장기의 병을 다스리는, 병원에서 가장 폭넓은 진료과입니다. 심장·소화기·호흡기·내분비·신장 등 영역으로 나뉘어 고혈압, 당뇨, 위장 질환, 폐 질환 같은 만성·급성 질환을 모두 진료합니다.",
+        "서록대학병원 내과는 중증·복합 질환 환자를 위한 협진 시스템과 24시간 중재시술 체계를 운영하며, 정밀한 진단을 바탕으로 한 맞춤 치료를 지향합니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"윤태경","school":"서울대학교 의과대학","major":"순환기내과 전공","career":"관상동맥 중재시술(스텐트) 4,100례 시행","paper":"「급성 심근경색 환자의 조기 재관류 전략」 Circulation 계열지 게재"},
+        {"rank":"부교수","name":"임수아","school":"가톨릭대학교 의과대학","major":"소화기내과 전공","career":"내시경 점막하 박리술(ESD) 1,300례","paper":"「조기 위암의 내시경 치료 후 추적 관찰」 소화기학회지 발표"},
+        {"rank":"조교수","name":"류한결","school":"성균관대학교 의과대학","major":"호흡기내과 전공","career":"기관지 내시경 시술 980례, 폐암 진단 다수","paper":"「만성폐쇄성폐질환의 흡입 치료 순응도」 호흡기학회 발표"},
+        {"rank":"펠로우","name":"진서영","school":"경희대학교 의과대학","major":"내분비내과 세부전공","career":"갑상선 결절 미세침흡인 검사 600례","paper":"「제2형 당뇨병 환자의 혈당 변동성과 합병증」 포스터 발표"},
+        {"rank":"레지던트","char":"kimsion"}
+      ]
+    },
+    {
+      "id":"ns","name":"신경외과","en":"Neurosurgery",
+      "desc":[
+        "신경외과는 뇌와 척수, 신경에 생긴 병을 수술로 치료하는 과입니다. 뇌출혈·뇌동맥류·뇌종양, 그리고 목·허리 디스크나 척추 질환까지, 신경계와 관련된 외과적 문제를 다룹니다.",
+        "서록대학병원 신경외과는 수술 중 신경 감시 장비와 수술용 현미경, 신경항법 시스템을 갖추고 있어 정교함이 요구되는 뇌혈관·척추 수술에서 높은 안전성을 유지합니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"강대원","school":"서울대학교 의과대학","major":"뇌혈관외과 전공","career":"뇌동맥류 결찰·코일색전술 2,400례","paper":"「파열성 뇌동맥류의 조기 수술 시점과 예후」 J Neurosurg 게재"},
+        {"rank":"부교수","name":"황지수","school":"연세대학교 의과대학","major":"척추신경외과 전공","career":"최소침습 척추 유합술 1,600례","paper":"「내시경 추간판 절제술의 회복 기간 비교」 척추학회 발표"},
+        {"rank":"조교수","char":"parkharim"},
+        {"rank":"펠로우","name":"남기훈","school":"울산대학교 의과대학","major":"뇌종양 세부전공","career":"각성 개두술 보조 및 종양 절제 참여 다수","paper":"「교모세포종의 형광 유도 절제」 증례 시리즈 발표"},
+        {"rank":"레지던트","name":"조유나","school":"전남대학교 의과대학","major":"신경외과 전공의 4년차","career":"두부 외상 응급 수술 보조, 션트 삽입 다수","paper":"원내 「만성 경막하 출혈의 천공 배액 성적」 정리"}
+      ]
+    },
+    {
+      "id":"os","name":"정형외과","en":"Orthopedic Surgery",
+      "desc":[
+        "정형외과는 뼈·관절·근육·인대 등 움직임에 관여하는 모든 조직을 다루는 과입니다. 골절과 탈구, 관절염, 인대 파열, 척추·관절 질환을 수술과 재활로 치료해 다시 걷고 움직일 수 있도록 돕습니다.",
+        "서록대학병원 정형외과는 인공관절 치환과 스포츠 손상 관절경 수술에 특화되어 있으며, 고령 환자의 골절 통합 진료 경로를 통해 빠른 회복을 지원합니다."
+      ],
+      "staff":[
+        {"rank":"정교수","char":"ohyunkyung"},
+        {"rank":"부교수","name":"서정호","school":"고려대학교 의과대학","major":"슬관절(무릎) 전공","career":"인공 슬관절 치환술 3,100례","paper":"「양측 동시 인공관절 치환의 안전성」 정형외과학회지 게재"},
+        {"rank":"조교수","name":"한지민","school":"중앙대학교 의과대학","major":"수부(손) 전공","career":"수부 미세접합 수술 700례","paper":"「절단 수지 재접합의 생존율 분석」 미세수술학회 발표"},
+        {"rank":"펠로우","name":"백승현","school":"인하대학교 의과대학","major":"스포츠의학 세부전공","career":"전방십자인대 재건 관절경 320례","paper":"「ACL 재건 후 복귀 시점에 관한 고찰」 포스터 발표"},
+        {"rank":"레지던트","name":"임도윤","school":"충남대학교 의과대학","major":"정형외과 전공의 3년차","career":"사지 골절 정복·고정술 보조 다수","paper":"원내 「고관절 골절의 조기 수술과 사망률」 정리"}
+      ]
+    },
+    {
+      "id":"path","name":"병리과","en":"Pathology",
+      "desc":[
+        "병리과는 환자를 직접 만나지는 않지만, 모든 진단의 마침표를 찍는 과입니다. 떼어낸 조직과 세포를 현미경으로 분석해 암 여부와 종류, 진행 정도를 가려내고, 치료 방향을 정하는 결정적 근거를 제공합니다.",
+        "서록대학병원 병리과는 디지털 병리 판독과 분자병리 검사 체계를 갖추어, 정밀의료에 필요한 유전자·표적 정보를 빠르고 정확하게 회신합니다."
+      ],
+      "staff":[
+        {"rank":"정교수","char":"jeongeunseong"},
+        {"rank":"부교수","name":"차민경","school":"서울대학교 의과대학","major":"외과병리 전공","career":"수술 중 동결절편 진단 9,000건 판독","paper":"「유방암 분자아형 분류의 재현성」 병리학회지 게재"},
+        {"rank":"조교수","name":"권나래","school":"한양대학교 의과대학","major":"세포병리 전공","career":"세침흡인 세포 검사 1.2만 건 판독","paper":"「갑상선 세포검사의 진단 일치율」 학회 구연 발표"},
+        {"rank":"펠로우","name":"송재우","school":"경북대학교 의과대학","major":"분자병리 세부전공","career":"차세대염기서열(NGS) 패널 판독 참여","paper":"「폐암 표적치료를 위한 유전자 변이 분석」 포스터 발표"},
+        {"rank":"레지던트","name":"양세빈","school":"영남대학교 의과대학","major":"병리과 전공의 3년차","career":"조직 슬라이드 검경·부검 보조 다수","paper":"원내 「면역조직화학 염색 표준화」 정리"}
+      ]
+    },
+    {
+      "id":"anes","name":"마취통증의학과","en":"Anesthesiology & Pain Medicine",
+      "desc":[
+        "마취통증의학과는 수술이 가능하도록 환자를 안전하게 재우고, 수술 내내 호흡·혈압·통증을 지키는 과입니다. 수술실 밖에서는 만성 통증을 신경 차단과 시술로 다스려, 통증 때문에 일상이 무너지지 않도록 돕습니다.",
+        "서록대학병원 마취통증의학과는 정밀 모니터링과 신경자극·고주파 시술에 강점이 있으며, 의공학 연구진과 협업해 통증 치료 장비를 함께 개발하고 있습니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"노현석","school":"서울대학교 의과대학","major":"심장마취 전공","career":"개심술 마취 2,800례 관리","paper":"「고위험 심장 수술의 마취 중 혈역학 관리」 마취과학회지 게재"},
+        {"rank":"부교수","name":"표지원","school":"가톨릭대학교 의과대학","major":"통증의학 전공","career":"척추 신경 차단·고주파 시술 5,400례","paper":"「만성 요통의 신경성형술 효과」 통증학회 발표"},
+        {"rank":"조교수","char":"leechaehyung"},
+        {"rank":"펠로우","name":"구하영","school":"아주대학교 의과대학","major":"부위마취 세부전공","career":"초음파 유도 신경 차단 900례","paper":"「수술 후 통증 조절을 위한 신경 차단」 포스터 발표"},
+        {"rank":"레지던트","name":"마준호","school":"조선대학교 의과대학","major":"마취통증의학과 전공의 2년차","career":"전신·부위 마취 관리 보조 다수","paper":"원내 「수술 중 저체온 예방 프로토콜」 정리"}
+      ]
+    },
+    {
+      "id":"em","name":"응급의학과","en":"Emergency Medicine",
+      "desc":[
+        "응급의학과는 병원의 가장 앞단에서, 무슨 병인지 모르는 위급한 환자를 가장 먼저 받아내는 과입니다. 심정지·외상·중독·뇌졸중처럼 1분 1초가 생사를 가르는 상황에서 빠르게 판단하고 곧장 처치를 시작합니다.",
+        "서록대학병원 응급의학과는 권역응급의료센터로서 중증외상팀·뇌졸중팀과 즉시 연결되는 신속 대응 체계를 운영하며, 24시간 전문의가 상주합니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"천우성","school":"연세대학교 의과대학","major":"중증외상 전공","career":"외상 소생술(ATLS) 지도 및 처치 다수","paper":"「중증외상 환자의 골든타임 전원 체계」 응급의학회지 게재"},
+        {"rank":"부교수","name":"도경아","school":"서울대학교 의과대학","major":"심폐소생·중독 전공","career":"체외순환 심폐소생(ECPR) 도입·운영","paper":"「병원 밖 심정지의 ECPR 적용 성적」 학회 구연 발표"},
+        {"rank":"조교수","name":"봉준영","school":"한림대학교 의과대학","major":"응급중환자 전공","career":"응급 기도확보·중심정맥 처치 다수","paper":"「패혈증 조기 인지 스코어의 유용성」 포스터 발표"},
+        {"rank":"펠로우","name":"하서진","school":"가천대학교 의과대학","major":"응급초음파 세부전공","career":"응급실 즉석 초음파(POCUS) 판독 다수","paper":"「외상 환자의 FAST 초음파 정확도」 발표"},
+        {"rank":"레지던트","char":"kangbin"}
+      ]
+    },
+    {
+      "id":"rt","name":"방사선과","en":"Radiation Oncology",
+      "desc":[
+        "방사선과(방사선종양학)는 보이지 않는 방사선을 칼처럼 정밀하게 모아 암세포만 골라 없애는 치료를 담당합니다. 수술이 어려운 부위의 종양도, 정상 조직은 최대한 지키면서 종양만 겨냥해 치료할 수 있습니다.",
+        "서록대학병원 방사선과는 세기조절방사선치료(IMRT)와 정위적 방사선수술 장비를 운영하며, 영상 기반의 정밀 치료계획으로 부작용을 줄이고 효과를 높입니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"선우진","school":"서울대학교 의과대학","major":"두경부 방사선종양 전공","career":"두경부암 정밀 방사선치료 1,900례 계획","paper":"「비인두암의 세기조절방사선치료 성적」 방사선종양학회지 게재"},
+        {"rank":"부교수","name":"명서윤","school":"연세대학교 의과대학","major":"유방·부인암 전공","career":"유방암 방사선치료 2,200례 관리","paper":"「유방 보존술 후 저분할 방사선치료」 학회 발표"},
+        {"rank":"조교수","name":"탁현우","school":"성균관대학교 의과대학","major":"정위방사선수술 전공","career":"뇌전이·폐 종양 정위치료 600례","paper":"「소수 전이 환자의 정위방사선수술 효과」 포스터 발표"},
+        {"rank":"펠로우","char":"yujeonghee"},
+        {"rank":"레지던트","name":"위소람","school":"전북대학교 의과대학","major":"방사선종양학과 전공의 3년차","career":"치료계획 윤곽 설정·검증 보조 다수","paper":"원내 「방사선 치료계획의 선량 검증」 정리"}
+      ]
+    },
+    {
+      "id":"ped","name":"소아청소년과","en":"Pediatrics",
+      "desc":[
+        "소아청소년과는 갓 태어난 아기부터 청소년까지, 자라나는 아이들의 건강을 돌보는 과입니다. 감기·장염 같은 흔한 병부터 성장·발달 문제, 소아 감염·심장·내분비 질환까지 폭넓게 진료합니다.",
+        "서록대학병원 소아청소년과는 어린이 전용 병동과 소아 응급·중환자 체계를 갖추고 있으며, 아이의 눈높이에 맞춘 진료로 두려움을 덜어주는 데 힘쓰고 있습니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"변주환","school":"서울대학교 의과대학","major":"소아심장 전공","career":"선천성 심장병 심도자 시술 1,100례","paper":"「선천성 심질환 아동의 장기 추적」 소아과학회지 게재"},
+        {"rank":"부교수","char":"kimjiwan"},
+        {"rank":"조교수","name":"설가은","school":"고려대학교 의과대학","major":"소아내분비 전공","career":"성장호르몬 치료 및 성조숙증 진료 다수","paper":"「저신장 아동의 성장호르몬 치료 반응」 발표"},
+        {"rank":"펠로우","name":"추민재","school":"한양대학교 의과대학","major":"신생아 세부전공","career":"미숙아 집중치료(NICU) 관리 다수","paper":"「초극소 미숙아의 호흡 관리 전략」 포스터 발표"},
+        {"rank":"레지던트","name":"방예원","school":"부산대학교 의과대학","major":"소아청소년과 전공의 3년차","career":"소아 응급·예방접종·일반 진료 다수","paper":"원내 「소아 열성 경련의 경과 관찰」 정리"}
+      ]
+    },
+    {
+      "id":"obgyn","name":"산부인과","en":"Obstetrics & Gynecology",
+      "desc":[
+        "산부인과는 여성의 임신과 출산을 돕고, 여성 생식기의 질환을 진료하는 과입니다. 산전 관리와 분만부터 자궁·난소 질환, 부인암, 갱년기 건강까지 여성의 전 생애 건강을 함께합니다.",
+        "서록대학병원 산부인과는 고위험 임신을 위한 모체태아 집중치료와 부인암 로봇 수술 체계를 갖추어, 산모와 아이 모두의 안전을 우선으로 합니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"진현주","school":"서울대학교 의과대학","major":"부인종양 전공","career":"부인암 로봇·복강경 수술 1,500례","paper":"「자궁경부암의 최소침습 수술 성적」 부인종양학회지 게재"},
+        {"rank":"부교수","name":"우성민","school":"연세대학교 의과대학","major":"모체태아의학 전공","career":"고위험 분만·태아 시술 관리 다수","paper":"「전치태반 산모의 분만 전략과 예후」 학회 발표"},
+        {"rank":"조교수","name":"사공빈","school":"고려대학교 의과대학","major":"생식내분비·난임 전공","career":"체외수정·복강경 난소 수술 다수","paper":"「다낭성 난소 증후군의 배란 유도」 포스터 발표"},
+        {"rank":"펠로우","name":"염지호","school":"이화여자대학교 의과대학","major":"부인종양 세부전공","career":"부인암 수술 보조 및 추적 진료","paper":"「난소암 환자의 유지 치료 반응」 발표"},
+        {"rank":"레지던트","name":"표나윤","school":"경상국립대학교 의과대학","major":"산부인과 전공의 3년차","career":"분만·제왕절개 보조, 외래 진료 다수","paper":"원내 「임신성 당뇨의 분만 결과」 정리"}
+      ]
+    },
+    {
+      "id":"radio","name":"영상의학과","en":"Diagnostic Radiology",
+      "desc":[
+        "영상의학과는 X선·CT·MRI·초음파 같은 영상을 읽어 몸속을 들여다보고, 병이 어디에 어떻게 있는지 찾아내는 과입니다. 또한 영상을 보면서 가는 관을 넣어 출혈을 막거나 종양을 치료하는 중재시술도 직접 시행합니다.",
+        "서록대학병원 영상의학과는 인공지능 보조 판독과 첨단 MRI·혈관조영 장비를 운영하며, 정확한 진단과 비수술적 중재치료의 두 축을 모두 담당합니다."
+      ],
+      "staff":[
+        {"rank":"정교수","name":"계동훈","school":"서울대학교 의과대학","major":"신경영상 전공","career":"뇌 MRI 판독 및 급성 뇌졸중 영상 다수","paper":"「급성 뇌경색의 관류 영상 분석」 영상의학회지 게재"},
+        {"rank":"부교수","name":"봉소희","school":"연세대학교 의과대학","major":"복부영상 전공","career":"간·췌장 영상 판독 및 조직검사 다수","paper":"「간세포암의 조영증강 양상 분석」 학회 발표"},
+        {"rank":"조교수","name":"마하준","school":"울산대학교 의과대학","major":"중재시술 전공","career":"혈관색전술·간동맥 화학색전술 700례","paper":"「간암의 경동맥 화학색전술 성적」 포스터 발표"},
+        {"rank":"펠로우","name":"견우림","school":"한양대학교 의과대학","major":"근골격영상 세부전공","career":"관절 MRI 판독 및 초음파 시술 다수","paper":"「회전근개 파열의 MRI 정확도」 발표"},
+        {"rank":"레지던트","name":"좌민성","school":"동아대학교 의과대학","major":"영상의학과 전공의 3년차","career":"CT·MRI 판독 보조 및 응급 영상 판독","paper":"원내 「응급 복부 CT의 판독 일치율」 정리"}
+      ]
+    }
+  ],
+  "characters":{
+    "kimsion":{
+      "deptId":"im","dept":"내과","rank":"레지던트","name":"김시온","en":"Kim Si-on",
+      "gender":"여성","age":"28세","id":"IM-R1-0284","since":"2022",
+      "school":"서록대학교 의학부 의학공학과","major":"내과 전공의 3년차",
+      "career":"입원 환자 회진·처방 보조, 내시경 및 중재시술 참여","paper":"원내 「반복 입원 심부전 환자의 약물 순응도」 증례 정리",
+      "facts":[
+        ["소속","내과 / 전공의 3년차"],
+        ["출신","서록대학교 의학부 의학공학과"],
+        ["담당","병동 입원 환자 관리"],
+        ["특기","꼼꼼한 차트 정리, 환자 관리"]
+      ],
+      "about":"성격이 유유자적한 내과 3년차. 지각 직전에 새벽 회진에 참여하고, 가장 늦게 차트를 닫는 사람으로 병동에 알려져 있다. 항상 느릿하고 타인에게 관심을 갖지 않는 것 같아도, 의외로 냉정한 성격이라 관찰이 잦아 회복기 환자를 놓치지 않는다. 놀 때 너무 격하게 놀아서 잠이 늘 부족하지만 환자 이름과 검사 결과만큼은 또렷하게 기억한다.",
+      "tone":"다른 레지던트들이 인상 찌푸릴 만큼 장난기가 많지만, 환자 앞에서는 또박또박 천천히 설명한다. 확신하는 일에도 \"한 번 더 확인해 보겠습니다\"라고 말하는 버릇이 있다.",
+      "quote":"수술 들어가기 전에 립 다시 바르고 오면 안 되겠지? 으응~ 준비 끝."
+    },
+    "parkharim":{
+      "deptId":"ns","dept":"신경외과","rank":"조교수","name":"박하림","en":"Park Ha-rim",
+      "gender":"여성","age":"34세","id":"NS-AP-0117","since":"2019",
+      "school":"존스 홉킨스 School of Medicine","major":"뇌혈관외과 전공",
+      "career":"뇌동맥류 결찰·코일색전술 1,300례, 미세 혈관 문합 다수","paper":"「파열 직전 뇌동맥류의 수술 시점 결정」 국제 학술지 게재",
+      "facts":[
+        ["소속","신경외과 / 조교수"],
+        ["출신","JHMI 의과부"],
+        ["세부전공","뇌혈관 미세수술"],
+        ["특기","고난도 뇌동맥류 클리핑"]
+      ],
+      "about":"시카고 출신의 냉담한 외과의. 수술 전 소독을 끝없이 주의하는 완벽주의자로, 한 번 잡은 수술 계획은 좀처럼 바꾸지 않는다. 후배들에게는 차갑게 느껴질 만큼 엄격한 편. 사실 모든 사람에게 엄격하다. 하지만 원내 정원에 자리 깔고 거주하는 고양이들의 식사를 책임진다.",
+      "tone":"군더더기 없는 짧은 문장으로 말한다. 감정을 잘 드러내지 않지만, 핵심만큼은 정확히 짚어 준다. 문제는 그 핵심을 영어로 짚어 준다.",
+      "quote":"Nerves do not take excuses. So do I."
+    },
+    "ohyunkyung":{
+      "deptId":"os","dept":"정형외과","rank":"정교수","name":"오윤경","en":"Oh Yun-kyung",
+      "gender":"여성","age":"39세","id":"OS-FP-0009","since":"2020",
+      "school":"존스 홉킨스 School of Medicine","major":"고관절·인공관절 전공",
+      "career":"인공 고·슬관절 치환술 5,600례, 고난도 재치환술 다수","paper":"「인공관절 재치환술의 장기 생존율」 정형외과학회지 게재 및 교과서 집필",
+      "facts":[
+        ["소속","정형외과 / 정교수 · 과장"],
+        ["출신","JHMI 의과부"],
+        ["세부전공","인공관절 치환"],
+        ["특기","고령 골절의 빠른 회복 설계"]
+      ],
+      "about":"정형외과를 이끄는 학과 공포의 덜렁이. 어린 나이에도 인공관절 분야를 지켜 온 권위자지만, 매일 의사증이나 휴대폰 등을 분실하고 나와서 레지던트들이 뛰어다니는 광경을 볼 수 있다. 카리스마 있는 회진으로 유명. 그럼에도 천재적인 실력 탓에, 환자에게는 \"다시 걷게 해주겠다\"는 약속을 끝까지 책임지는 사람으로 통한다.",
+      "tone":"단호한 어조의 부산 사투리. 환자에게는 결과를 꾸미지 않고 솔직하게, 그러나 자신의 능력을 바탕으로 한 희망을 함께 전한다. 학생들에게는 글쎄.",
+      "quote":"메모는 기본이고, 복습. 니 뼈에 불 나기 전까지는 다시 펼치 봐야 되는 기라."
+    },
+    "jeongeunseong":{
+      "deptId":"path","dept":"병리과","rank":"정교수","name":"정은성","en":"Jeong Eun-seong",
+      "gender":"여성","age":"41세","id":"PA-FP-0021","since":"2009",
+      "school":"서울대학교 의과대학","major":"외과병리·분자병리 전공",
+      "career":"수술 중 동결절편 진단 1.4만 건, 난해 종양 최종 판독 다수","paper":"「희귀 연부조직 육종의 분자 분류」 국제 병리학회지 게재",
+      "facts":[
+        ["소속","병리과 / 정교수"],
+        ["출신","서울대학교 의과대학 의예과"],
+        ["세부전공","종양 병리 진단"],
+        ["특기","애매한 경계 병변의 최종 판정"]
+      ],
+      "about":"진단의 마지막 관문을 지키는 병리의사. 다른 과에서 답이 갈리는 어려운 조직도 현미경 위에서 결론이 나니까. 의외로 원내와 원 바깥을 가리지 않고 인기인이지만, 고서 탐독을 좋아하는 탓에 교수실에서 나오는 일이 드물다. 수많은 기록들을 읽으며 연구한 바, 정은성의 한 줄 진단이 환자의 치료 방향을 통째로 바꾸기도 한다.",
+      "tone":"속삭이듯이 느린 말투. 집요하게 한 학생의 의견을 파고드는 경우가 많다. 단정적인 표현을 아끼며, 사회성이 꽤 있는 편이라 대체로 들어 주려고 노력하긴 하지만…….",
+      "quote":"말하지 말고 이 움직임을 보는 거예요. 자료로 쓰기 좋겠죠? 후속 논문 집필할 때."
+    },
+    "leechaehyung":{
+      "deptId":"anes","dept":"마취통증의학과","rank":"조교수","name":"이채형","en":"Lee Chae-hyung",
+      "gender":"여성","age":"34세","id":"AN-AP-0203","since":"2020",
+      "school":"하버드대학교 화학공학과 출신","major":"통증의학 전공 / 의공학 융합",
+      "career":"신경자극·고주파 시술 1,800례, 통증 치료 장비 공동 개발","paper":"「착용형 신경자극 장치의 만성 통증 완화 효과」 의공학 국제지 게재",
+      "facts":[
+        ["소속","마취통증의학과 / 조교수"],
+        ["겸임","원외 의공학 연구원 겸임"],
+        ["출신","Harvard University CENG"],
+        ["특기","통증 신호의 정밀 차단·기기 설계"]
+      ],
+      "about":"공학에서 의학으로 건너온 융합형 연구자. 혼자 연구하는 시간과 겸임 교수로서 업무하는 시간 모두에 능란하며, 진료실과 연구실을 오가며 직접 장비를 손본다. 새로운 피하 주입 나노봇 이야기가 나오면 눈이 반짝이는 기계 애호가지만, 환자의 통증 일지만큼은 데이터처럼 꼼꼼히 들여다보는 편.",
+      "tone":"전문 용어를 쉬운 비유로 바꿔 설명하는 걸 좋아한다. 의식하지 않은 농담이 잦으며, 의외로 일을 대충대충 하는 것처럼 보일 때도?",
+      "quote":"치료율 70%? 30%는 생략하죠 뭐. 반올림 배우잖아요, 초등학교에서. 졸업한 지 오래돼서 기억은 안 나지만."
+    },
+    "kangbin":{
+      "deptId":"em","dept":"응급의학과","rank":"레지던트","name":"강빈","en":"Kang Bin",
+      "gender":"여성","age":"28세","id":"EM-R2-0451","since":"2023",
+      "school":"서울대학교 의과대학","major":"응급의학과 전공의 2년차",
+      "career":"심폐소생술·기도 확보 처치 다수, 권역외상센터 초기 대응 참여","paper":"원내 「응급실 패혈증 환자의 초기 1시간 처치」 정리",
+      "facts":[
+        ["소속","응급의학과 / 전공의 2년차"],
+        ["출신","서울대학교 의과대학 의예과"],
+        ["담당","응급실 초진·중증 분류"],
+        ["특기","빠른 판단과 침착한 손놀림"]
+      ],
+      "about":"응급실에서 가장 빨리, 많이, 오래 움직이는 사람. 한밤중 구급차가 들어오면 가장 먼저 콜을 돌리고 움직인다. 정신없는 와중에도 목소리는 또렷하고 손은 차분해, 선배들도 위급한 처치를 믿고 맡긴다. 끼니를 거르기 일쑤지만 이어폰을 꽂고 캔커피를 마시는 것만으로도 어느 정도 회복이 되는 모양이다.",
+      "tone":"느리고 냉소적으로 말하지만 환자 앞에서는 톤을 낮춘다. 의외로 거친 농담을 많이 하는데, 피로도가 높아질수록 점점 더 극단적으로 변하는 것이 특징.",
+      "quote":"서명하고 넘기면 되죠? 근데 제가 지금 눈이 뻑뻑해서… 뭐라고 써 있는 거야, 사망증명서?"
+    },
+    "yujeonghee":{
+      "deptId":"rt","dept":"방사선과","rank":"펠로우","name":"유정희","en":"Yu Jeong-hee",
+      "gender":"여성","age":"33세","id":"RT-F-0138","since":"2020",
+      "school":"서록대학교 공학부","major":"방사선종양학 세부전공(임상강사)",
+      "career":"세기조절방사선치료(IMRT) 계획 수립 및 검증 다수","paper":"「두경부암 방사선치료의 정상조직 보호 전략」 학회 구연 발표",
+      "facts":[
+        ["소속","방사선과 / 펠로우(임상강사)"],
+        ["출신","서록대학교 생명융합공학과"],
+        ["세부전공","정밀 방사선 치료계획"],
+        ["특기","정상 조직을 지키는 선량 설계"]
+      ],
+      "about":"눈에 보이지 않는 방사선을 밀리미터 단위로 겨냥하는 치료계획가. 환자마다 종양의 위치와 모양이 다르기에, 매번 새로 그림을 그리듯 치료 경로를 설계한다. 진심으로 사람을 잘 챙기며, 모든 의과 레지던트며 인턴들에게 '그 착한 선배'로 통할 만큼 따뜻한 말 한마디를 꼭 건넨다.",
+      "tone":"부드럽고 천천히 말하는 것에 비해, 의외로 타인을 놀리는 것도 좋아해서 장난기가 많다. 어려운 치료 과정을 \"하나씩 같이 가요\"라며 안심시키듯 풀어 설명한다.",
+      "quote":"살찌긴요. 누가 봐도 유령 종양이네. 괜찮으니까 저한테 치료받으러 오세요. 값은 오프 때 맥주 한 잔."
+    },
+    "kimjiwan":{
+      "deptId":"ped","dept":"소아청소년과","rank":"부교수","name":"김지완","en":"Kim Ji-wan",
+      "gender":"여성","age":"37세","id":"PD-AOP-0066","since":"2014",
+      "school":"서록대학교 의학부","major":"소아 감염·호흡기 전공",
+      "career":"소아 중증 감염·폐렴 진료 다수, 소아 호흡기 집중치료 운영","paper":"「소아 폐렴 입원 환자의 항생제 사용 적정성」 소아과학회지 게재",
+      "facts":[
+        ["소속","소아청소년과 / 부교수"],
+        ["출신","서록대학교 의예과 수석졸업"],
+        ["세부전공","소아 감염·호흡기"],
+        ["특기","아이들의 눈높이에 맞는 설명과 치료"]
+      ],
+      "about":"아이들에게 가장 인기 많은 선생님. 진료실에 작은 장난감과 스티커가 가득하고, 청진기를 대기 전 늘 아이와 눈높이를 맞춘다. 그러나 원내에서 평가는 꽤 무서운 부교수로 통하고 있다. 어쩐지 아이들이 눈 앞에 안 보이기 시작한 순간부터 다크서클이 더 짙어지는 것처럼 보이는 변신 기술도 갖추고 있다. 욕설을 달고 사는 부교수님.",
+      "tone":"아이에게는 다정한 목소리로, 의사들에게는 싸늘한 지적으로. 가끔 인격이 14개 정도 있는 것처럼 보일 때도. 그러나 회진 시에는 \"하나도 안 아프게 해줄게\"라는 말로 아이를 먼저 달랜다.",
+      "quote":"아이 앞에서는, 네가 의사라도 어른인 척을 잠깐 내려놓았어야지."
+    }
+  }
+}
+</script>
+
+<!-- ============================ 로직 ============================ -->
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const LOGO = "https://raw.githubusercontent.com/yermigionic-web/sruh/refs/heads/main/sruhlogo.png";
+const RAW = "https://raw.githubusercontent.com/yermigionic-web/sruh/refs/heads/main/";
+/* ---- 클릭/터치 사운드 (마우스 클리킹) ---- */
+const clickSound = new Audio("https://github.com/yermigionic-web/sruh/raw/refs/heads/main/click.mp3");
+clickSound.preload = "auto";
+function playClick(){
+  try{ clickSound.currentTime = 0; const p = clickSound.play(); if(p) p.catch(()=>{}); }catch(e){}
+}
+/* 모든 클릭/터치에서 사운드 (버튼·칩·카드 등 인터랙션 요소) */
+document.addEventListener('pointerdown', (e)=>{
+  if(e.target.closest('button, .chip, .staff.clickable, .backbtn, a')) playClick();
+}, true);
+
+/* ---- 이미지 자리표시 SVG ---- */
+function ph(label, sub){
+  return `<div class="imgph"><div class="imgph-tag">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/>
+      <path d="M3 17l4-4 3 3 4-5 7 6"/></svg>
+    <div>${label}<br><span style="opacity:.7">${sub||'GitHub 이미지 추후 삽입'}</span></div>
+  </div></div>`;
+}
+
+const els = {
+  tabs: document.getElementById('tabs'),
+  subtabs: document.getElementById('subtabs'),
+  home: document.getElementById('view-home'),
+  dept: document.getElementById('view-dept'),
+  charV: document.getElementById('view-char')
+};
+
+/* ================= (1) 메인/홈 렌더 ================= */
+function renderHome(){
+  const h = DATA.hospital;
+  els.home.innerHTML = `
+    <!-- 메인 히어로 -->
+    <div class="hero">
+      <div class="hero-in">
+        <span class="rank"><span class="dot"></span>${h.rank}</span>
+        <h1>생명을 <em>지키는</em><br>가장 가까운 거리</h1>
+        <p class="sub">서록대학교 의학부 부속병원은 환자 한 분 한 분의 곁에서, 정밀한 진단과 따뜻한 손길로 회복의 길을 함께 걷습니다.</p>
+        <div class="hero-stats">
+          ${h.stats.map(s=>`<div class="s"><div class="n">${s.n}<small>${s.u}</small></div><div class="l">${s.l}</div></div>`).join('')}
+        </div>
+      </div>
+      <!-- 병원 전경 이미지 자리 (GitHub 추후 삽입) -->
+      <div class="hero-photo"> <img src="https://raw.githubusercontent.com/yermigionic-web/sruh/refs/heads/main/maingeon.png"
+       alt="병원 앞에서"
+       style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    </div>
+
+    <!-- 자랑거리 그리드 -->
+    <div class="section">
+      <div class="head">
+        <span class="eyebrow">Why Seorok</span>
+        <h2>전국이 인정한 서록의 이름</h2>
+        <p>대한민국 종합병원 평가 2위. 서록은 숫자보다 사람을 먼저 봅니다.</p>
+      </div>
+      <div class="feature-grid">
+        ${[
+          ['중증·복합 질환 중심','다학제 협진으로 어려운 병일수록 더 정확하게 봅니다.','M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z'],
+          ['24시간 권역응급센터','한밤중에도 전문의가 늘 깨어 있습니다.','M12 6v6l4 2 M12 22a10 10 0 110-20 10 10 0 010 20z'],
+          ['정밀의료 연구','분자·유전자 분석으로 환자에게 꼭 맞는 치료를','M9 3v4M15 3v4M7 7h10l-1 12a3 3 0 01-3 3H11a3 3 0 01-3-3z'],
+          ['1,820 병상 규모','넉넉한 병상과 어린이 전용 병동까지 갖췄습니다.','M3 7h18M3 12h18M6 7v10M18 7v10']
+        ].map(f=>`
+          <div class="fcard">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="${f[2]}"/></svg></div>
+            <h3>${f[0]}</h3><p>${f[1]}</p>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- 자긍심 글라스 카드 -->
+    <div class="section">
+      <div class="glass">
+        <div class="quote-mark">"</div>
+        <h3>“두 번째라는 자리가, 우리를 더 겸손하게 만듭니다.”</h3>
+        <p>정상에 오르는 것보다 환자 곁을 지키는 일이 어렵다는 걸, 서록은 압니다. 그래서 우리는 매일 처음처럼 진료합니다. 가장 어려운 환자가 마지막으로 찾는 병원, 그것이 서록이 자부하는 진짜 순위입니다.</p>
+      </div>
+    </div>
+
+    <!-- 병원 소개 본문 (lorem 톤 + 자긍심) -->
+    <div class="section" id="aboutBlock">
+      <div class="head">
+        <span class="eyebrow">About</span>
+        <h2>서록대학병원 이야기</h2>
+      </div>
+      <div class="banner">  <img src="https://raw.githubusercontent.com/yermigionic-web/sruh/refs/heads/main/lobby1.png"
+       alt="병원 전경"
+       style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div class="glass" style="margin-top:14px">
+        <p style="margin-top:0">서록대학교 의학부 부속병원은 의학부의 교육·연구 역량을 그대로 진료에 잇는 상급종합병원입니다. 우리는 흔한 병이라도 귀하게 대하며, 나날이 서록대학교의 빛나는 위상을 모아 더 많은 전문가가 머리를 맞댈 수 있도록 하고 있습니다.</p>
+        <p>최첨단 수술실과 정밀 영상 장비, 그리고 무엇보다 환자를 끝까지 책임지는 의료진. 서록의 모든 자긍심은 결국 “나아서 걸어 나가는 환자”라는 한 장면으로 모입니다. 우리는 그 장면을 위해, 오늘도 가장 앞에 섭니다.</p>
+      </div>
+    </div>
+
+    <!-- 진료 안내 -->
+    <div class="section" id="visitBlock">
+      <div class="head">
+        <span class="eyebrow">Visit</span>
+        <h2>진료 안내</h2>
+        <p>예약·진료 시간 및 찾으시는 길</p>
+      </div>
+      <div class="pad">
+        <div class="char-card kv">
+          <div class="row"><div class="k">진료 시간</div><div class="v"><b>평일</b> 08:30 – 17:30 · <b>토요일</b> 08:30 – 12:30</div></div>
+          <div class="row"><div class="k">응급실</div><div class="v"><b>24시간</b> 운영 · 권역응급의료센터</div></div>
+          <div class="row"><div class="k">대표 전화</div><div class="v">1599 – 0000 (가상)</div></div>
+          <div class="row"><div class="k">주소</div><div class="v">서을특별시 영등포구 서록로 100, 서록대학교 의학부 부속병원 </div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="line"></div>
+      서록대학교 의학부 부속병원 · SEOROK UNIVERSITY HOSPITAL
+    </div>
+  `;
+}
+
+/* ================= 의과 서브탭 ================= */
+function renderSubtabs(activeId){
+  els.subtabs.innerHTML = DATA.departments.map(d=>{
+    const hasChar = d.staff.some(s=>s.char);
+    return `<button class="chip ${d.id===activeId?'on':''}" data-dept="${d.id}">${d.name}${hasChar?'<span class="mark"></span>':''}</button>`;
+  }).join('');
+  els.subtabs.querySelectorAll('.chip').forEach(c=>{
+    c.addEventListener('click', ()=> openDept(c.dataset.dept));
+  });
+}
+
+/* ================= (2) 의과 상세 렌더 ================= */
+function staffCard(s){
+  if(s.char){
+    const c = DATA.characters[s.char];
+    return `<div class="staff clickable" data-char="${s.char}">
+    <div class="photo has-char">
+  <!-- 증명사진: ${c.name} -->
+  <img src="${RAW}${s.char}.png" alt="${c.name}"
+       style="width:100%;height:100%;object-fit:cover;display:block;"
+       onerror="this.remove()">
+</div>
+      <div class="info">
+        <span class="rank ${s.rank==='정교수'?'lead':''}">${s.rank}</span>
+        <div class="nm">${c.name} <span class="go">프로필 보기 ›</span></div>
+        <div class="meta"><b>${c.school}</b> · ${c.major}</div>
+        <div class="meta">${c.career}</div>
+        <div class="paper">${c.paper}</div>
+      </div>
+    </div>`;
+  }
+  return `<div class="staff">
+    <div class="photo"><!-- 의료진 사진 자리 --></div>
+    <div class="info">
+      <span class="rank ${s.rank==='정교수'?'lead':''}">${s.rank}</span>
+      <div class="nm">${s.name}</div>
+      <div class="meta"><b>${s.school}</b> · ${s.major}</div>
+      <div class="meta">${s.career}</div>
+      <div class="paper">${s.paper}</div>
+    </div>
+  </div>`;
+}
+
+function openDept(id){
+  const idx = DATA.departments.findIndex(x=>x.id===id);  // ← 추가: 순번(0부터)
+  const d = DATA.departments[idx];                       // ← 기존 find 대신 이걸로
+  if(!d) return;
+  setTab('dept');
+  renderSubtabs(id);
+  els.dept.innerHTML = `
+    <div class="dept-hero">
+      <span class="eyebrow">Department</span>
+      <h1>${d.name}</h1>
+      <div class="en">${d.en}</div>
+    </div>
+    <div class="dept-desc">${d.desc.map(p=>`<p>${p}</p>`).join('')}</div>
+<div class="banner" style="margin-top:18px">
+  <img src="https://raw.githubusercontent.com/yermigionic-web/sruh/refs/heads/main/measure${idx+1}.png"
+       alt="${d.name} 진료 현장"
+       style="width:100%;height:170px;object-fit:cover;display:block;">
+</div>
+
+    <div class="staff-head"><h2>주요 의료진</h2><span>정교수 → 레지던트 순</span></div>
+    <div class="staff-list">${d.staff.map(staffCard).join('')}</div>
+
+    <div class="foot"><div class="line"></div>서록대학병원 · ${d.name} (${d.en})</div>
+  `;
+  els.dept.querySelectorAll('.staff.clickable').forEach(card=>{
+    card.addEventListener('click', ()=> openChar(card.dataset.char));
+  });
+  showView('dept');
+  scrollTopSoon();
+}
+
+/* ================= (3) 캐릭터 상세 렌더 ================= */
+function openChar(key){
+  const c = DATA.characters[key];
+  if(!c) return;
+  els.charV.innerHTML = `
+    <button class="backbtn" data-back="${c.deptId}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      ${c.dept}로 돌아가기
+    </button>
+
+    <div class="char-wrap">
+      <div class="char-top">
+        <!-- ===== 의사 ID 카드 (시그니처) ===== -->
+        <div class="idcard">
+          <div class="idcard-inner">
+            <div class="idcard-bar">
+              <img src="${LOGO}" alt="서록대학병원" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+              <span class="lf">서록</span>
+              <span>STAFF ID</span>
+            </div>
+      <div class="idcard-photo">
+  <!-- 증명사진: ${c.name} (의과 페이지와 동일 파일) -->
+  <img src="${RAW}${key}.png" alt="${c.name}"
+       style="width:100%;height:100%;object-fit:cover;border-radius:11px;display:block;"
+       onerror="this.remove()">
+</div>
+            <div class="idcard-body">
+              <div class="idcard-name">${c.name}<small>${c.en}</small></div>
+              <div class="idcard-role">${c.dept} · ${c.rank}</div>
+              <div class="idcard-strip">
+                <div><div class="lbl">ID No.</div><div class="val">${c.id}</div></div>
+                <div style="text-align:right"><div class="lbl">Since</div><div class="val">${c.since}</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 우측 기본 정보 ===== -->
+        <div class="char-meta">
+          <span class="eyebrow">Profile</span>
+          <h1>${c.name}</h1>
+          <div class="dept">${c.dept} · ${c.rank}</div>
+          <div class="chips">
+            <span class="c"><b>${c.gender}</b></span>
+            <span class="c"><b>${c.age}</b></span>
+            <span class="c">${c.dept}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="char-section">
+        <h3>기본 정보</h3>
+        <div class="char-card kv">
+          ${c.facts.map(f=>`<div class="row"><div class="k">${f[0]}</div><div class="v">${f[1]}</div></div>`).join('')}
+          <div class="row"><div class="k">학력</div><div class="v"><b>${c.school}</b> · ${c.major}</div></div>
+        </div>
+      </div>
+
+      <div class="char-section">
+        <h3>인물 소개</h3>
+        <div class="char-card"><p>${c.about}</p></div>
+      </div>
+
+      <div class="char-section">
+        <h3>말투 & 진료 스타일</h3>
+        <div class="char-card"><p>${c.tone}</p></div>
+      </div>
+
+      <div class="bigquote">
+        <div class="qm">"</div>
+        <q>${c.quote}</q>
+        <div class="who">— ${c.name}, ${c.dept} ${c.rank}</div>
+      </div>
+
+      <div class="foot"><div class="line"></div>서록대학병원 의료진 프로필 · ${c.name}</div>
+    </div>
+  `;
+  els.charV.querySelector('.backbtn').addEventListener('click', e=> openDept(e.currentTarget.dataset.back));
+  showView('char');
+  scrollTopSoon();
+}
+
+/* ================= 뷰/탭 전환 ================= */
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  ({home:els.home, dept:els.dept, char:els.charV})[name].classList.add('on');
+}
+function setTab(name){
+  els.tabs.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.tab===name || (name==='dept'&&t.dataset.tab==='dept')));
+  els.subtabs.classList.toggle('show', name==='dept');
+}
+function scrollTopSoon(){ requestAnimationFrame(()=>{ window.scrollTo({top:0,behavior:'instant'}); document.querySelector('.device').scrollIntoView({block:'start'}); }); }
+
+/* 메인 탭 클릭 */
+els.tabs.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    const k = t.dataset.tab;
+    if(k==='dept'){
+      // 의과 소개 → 첫 의과 자동 오픈
+      openDept(DATA.departments[0].id);
+      return;
+    }
+    setTab(k==='home'?'home':k);
+    els.tabs.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on', x===t));
+    els.subtabs.classList.remove('show');
+    showView('home');
+    // 홈 내 앵커 이동
+    const map={about:'aboutBlock', visit:'visitBlock'};
+    if(map[k]){ requestAnimationFrame(()=> document.getElementById(map[k])?.scrollIntoView({behavior:'smooth',block:'start'})); }
+    else scrollTopSoon();
+  });
+});
+
+/* 초기 렌더 */
+renderHome();
+renderSubtabs();
+</script>
+</body>
+</html>
